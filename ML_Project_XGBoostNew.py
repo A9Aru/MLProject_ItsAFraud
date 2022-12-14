@@ -18,22 +18,21 @@ from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.pipeline import Pipeline
 from sklearn import preprocessing
-
+#import statements
 
 # In[4]:
 
 
 train=pd.read_csv("pre_processed_train.csv")
 test=pd.read_csv("pre_processed_test.csv")
-
+#loading the pre-processed datasets
 
 # In[5]:
 
 
 ytrain=train["isFraud"]
 train.drop(axis = 1, labels = ["isFraud","Unnamed: 0"], inplace = True)
-
-
+#separating target column and the rest of dataset
 # In[6]:
 
 
@@ -49,7 +48,7 @@ steps = [('o', over),('u',under)]
 pipeline = Pipeline(steps=steps)
 train1, ytrain1 = pipeline.fit_resample(train, ytrain)
 
-
+#doing over sampling and under sampling to make the dataset more balanced
 # In[8]:
 
 
@@ -57,7 +56,7 @@ from sklearn.preprocessing import StandardScaler
 scale= StandardScaler()
 X_train = scale.fit_transform(train1)
 X_test=scale.transform(test) 
-
+#scaling the dataset
 
 # In[9]:
 
@@ -73,14 +72,14 @@ abc = XGBClassifier(
         njobs=-1
     )       
 abc.fit(X_train,ytrain1)
-
+#fitting the model for training
 
 # In[10]:
 
 
 y_pred1 = abc.predict_proba(X_test)
 y_pred1.sum()
-
+#predicting the outputs
 
 # In[11]:
 
@@ -92,7 +91,7 @@ for i in range(len(y_pred1)):
     y_pred.append(1)
   else:
     y_pred.append(0)
-
+#threshold setting from probabilities
 
 # In[12]:
 
@@ -111,7 +110,7 @@ with open('xgboost_finalsub.csv', 'w', newline='') as file:
     for i in y_pred:
         writer.writerow([idx,i])
         idx=idx+1
-
+#saving the data in submittable csv files 
 
 # In[ ]:
 
